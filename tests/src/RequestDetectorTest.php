@@ -6,7 +6,7 @@ use Sportic\Omniresult\Timeit\RequestDetector;
 
 /**
  * Class RequestDetectorTest
- * @package Sportic\Omniresult\Trackmyrace\Tests
+ * @package Sportic\Omniresult\Timeit\Tests
  */
 class RequestDetectorTest extends AbstractTest
 {
@@ -36,25 +36,25 @@ class RequestDetectorTest extends AbstractTest
                 'https://time-it.go.ro/2020/subcarpati/',
                 true,
                 'event',
-                ['eventSlug' => '2020/subcarpati']
+                ['host' => 'time-it.go.ro', 'eventSlug' => '2020/subcarpati']
             ],
             [
             'https://time-it.go.ro/2020/subcarpati/index.php?head=off&sort=c1f',
                 true,
                 'results',
-                ['eventSlug' => '2020/subcarpati', 'slug' => 'c1f']
+                ['host' => 'time-it.go.ro', 'eventSlug' => '2020/subcarpati', 'slug' => 'c1f']
             ],
             [
             'https://time-it.go.ro/2020/IezerRun/index.php?head=off&sort=cm',
                 true,
                 'results',
-                ['eventSlug' => '2020/iezerrun', 'slug' => 'cm']
+                ['host' => 'time-it.go.ro', 'eventSlug' => '2020/iezerrun', 'slug' => 'cm']
             ],
             [
             'https://time-it.go.ro/2020/iasiintrail/index.php?head=off&sort=c1f',
                 true,
                 'results',
-                ['eventSlug' => '2020/iasiintrail', 'slug' => 'c1f']
+                ['host' => 'time-it.go.ro', 'eventSlug' => '2020/iasiintrail', 'slug' => 'c1f']
             ]
         ];
     }

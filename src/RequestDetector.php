@@ -55,6 +55,8 @@ class RequestDetector extends AbstractUrlDetector
     {
         $return = [];
 
+        $return['host'] = $this->getUrlComponent('host');
+
         $pathParts = $this->getPathParts();
         $return['eventSlug'] = $pathParts[0].'/'.$pathParts[1];
 

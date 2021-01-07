@@ -3,12 +3,11 @@
 require '../vendor/autoload.php';
 
 $parameters = [
-    'eventSlug' => 'cozia-mountain-run-6',
-    'page' => 7,
+    'eventSlug' => '2020/parang',
 ];
 
-$client = new \Sportic\Omniresult\Timeit\TrackmyraceClient();
-$resultsParser = $client->results($parameters);
-$resultsData   = $resultsParser->getContent();
+$client = new \Sportic\Omniresult\Timeit\TimeitClient();
+$parser = $client->event($parameters);
+$data   = $parser->getContent();
 
-var_dump($resultsData);
+var_dump($data->all());

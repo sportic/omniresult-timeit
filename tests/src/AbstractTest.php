@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class AbstractPageTest
- * @package Sportic\Omniresult\Trackmyrace\Tests
+ * @package Sportic\Omniresult\Timeit\Tests
  */
 abstract class AbstractTest extends TestCase
 {
