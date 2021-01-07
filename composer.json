@@ -1,0 +1,30 @@
+{
+  "name": "sportic/omniresult-timeit",
+  "description": "a scraper for getting data from time-it.ro",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gabriel Solomon",
+      "email": "hello@gabrielsolomon.ro"
+    }
+  ],
+  "require": {
+    "php": "^7.0|^8.0",
+    "ext-dom": "*",
+    "sportic/omniresult-common": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.2|^8.0|^9.0",
+    "mockery/mockery": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sportic\\Omniresult\\Timeit\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Sportic\\Omniresult\\Timeit\\Tests\\": "tests/src"
+    }
+  }
+}
