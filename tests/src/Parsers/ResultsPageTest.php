@@ -46,8 +46,8 @@ class ResultsPageTest extends AbstractPageTest
                 'status' => null,
                 'country' => null,
                 'club' => null,
-                'firstName' => 'Codrea',
-                'lastName' => 'Gheorghe',
+                'firstName' => 'Gheorghe',
+                'lastName' => 'Codrea',
                 'timeGross' => null,
                 'notes' => null
             ],

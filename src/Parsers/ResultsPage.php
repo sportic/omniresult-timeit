@@ -176,7 +176,7 @@ class ResultsPage extends AbstractParser
     {
         return [
             'bib' => 'bib',
-            'nume' => 'fullName',
+            'nume' => 'fullNameLF',
             'sex' => 'gender',
             'gender' => 'gender',
             'category' => 'agegroup',

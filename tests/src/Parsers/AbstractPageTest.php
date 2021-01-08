@@ -43,7 +43,7 @@ abstract class AbstractPageTest extends AbstractTest
         $parser->setScraper($scrapper);
         $parser->setCrawler($crawler);
 
-        //        file_put_contents(
+//                file_put_contents(
 //            TEST_FIXTURE_PATH . DS . 'Parsers' . DS . $fixturePath . '.serialized',
 //            serialize($parser->getContent())
 //        );
