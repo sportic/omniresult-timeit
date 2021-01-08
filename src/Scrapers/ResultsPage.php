@@ -23,17 +23,9 @@ class ResultsPage extends AbstractScraper
     /**
      * @return mixed
      */
-    public function getRaceSlug()
+    public function getCategorySlug()
     {
-        return $this->getParameter('raceSlug');
-    }
-
-    /**
-     * @return int
-     */
-    public function getPage()
-    {
-        return $this->getParameter('page', 1);
+        return $this->getParameter('categorySlug');
     }
 
     /**
@@ -53,15 +45,11 @@ class ResultsPage extends AbstractScraper
     /**
      * @return string
      */
-    public function getCrawlerUri()
+    public function getCrawlerUri(): string
     {
         return $this->getCrawlerUriHost()
-            . '/en/running/event-zone/ajax/event/'
-            . $this->getEventSlug()
-            . '/resultstable/'
-            . $this->getRaceSlug()
-            . '/expanded/page/'
-            . ($this->getPage() - 1)
-            . '/';
+            . '/' . $this->getEventSlug()
+            . '/?slug='            . $this->getCategorySlug()
+            . '&head=off';
     }
 }

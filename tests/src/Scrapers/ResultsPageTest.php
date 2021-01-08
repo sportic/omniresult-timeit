@@ -19,7 +19,7 @@ class ResultsPageTest extends TestCase
         static::assertInstanceOf(Crawler::class, $crawler);
 
         static::assertSame(
-            'https://www.trackmyrace.com/en/running/event-zone/ajax/event/cozia-mountain-run-6/resultstable/-bf626f0882/expanded/page/1/',
+            'https://time-it.ro/2020/parang/?slug=C1M&head=off',
             $crawler->getUri()
         );
     }
@@ -30,9 +30,21 @@ class ResultsPageTest extends TestCase
 
         static::assertInstanceOf(Crawler::class, $crawler);
 
-        static::assertContains('Constantin Mirica', $crawler->html());
-//        file_put_contents(TEST_FIXTURE_PATH . '/Parsers/ResultsPage/event_page.html', $crawler->html());
+        static::assertStringContainsString('Palici Viorel', $crawler->html());
     }
+
+//    public function testgenerateFixture()
+//    {
+//        $params = [
+//            'eventSlug' => '2020/parang',
+//            'categorySlug' => 'C1M'
+//        ];
+//        $scraper = new ResultsPage();
+//        $scraper->initialize($params);
+//        $crawler = $scraper->getCrawler();
+//
+//        file_put_contents(TEST_FIXTURE_PATH . '/Parsers/ResultsPage/SimpleTable/page.html', $crawler->html());
+//    }
 
     /**
      * @return Crawler
@@ -40,9 +52,8 @@ class ResultsPageTest extends TestCase
     protected function getCrawler()
     {
         $params = [
-            'eventSlug' => 'cozia-mountain-run-6',
-            'raceSlug' => '-bf626f0882',
-            'page' => 2,
+            'eventSlug' => '2020/parang',
+            'categorySlug' => 'C1M',
         ];
         $scraper = new ResultsPage();
         $scraper->initialize($params);

@@ -4,11 +4,8 @@ namespace Sportic\Omniresult\Timeit\Parsers;
 
 use DOMElement;
 use Sportic\Omniresult\Common\Content\ListContent;
-use Sportic\Omniresult\Common\Models\Race;
 use Sportic\Omniresult\Common\Models\Result;
-use Sportic\Omniresult\Common\Models\Split;
-use Sportic\Omniresult\Common\Models\SplitCollection;
-use Sportic\Omniresult\Timeit\Helper;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Class ResultsPage
@@ -21,9 +18,9 @@ class ResultsPage extends AbstractParser
     /**
      * @return array
      */
-    protected function generateContent()
+    protected function generateContent(): array
     {
-        $this->returnContent['records'] = $this->parseResultsTable();
+        $this->returnContent['records'] = $this->parseResults();
         $this->returnContent['pagination'] = $this->parseResultsPagination();
 
         return $this->returnContent;
@@ -32,45 +29,56 @@ class ResultsPage extends AbstractParser
     /**
      * @return array
      */
-    protected function parseResultsTable()
+    protected function parseResults()
     {
-        $return = [];
-        $resultsRows = $this->getCrawler()->filter(
-            'tr.content_row'
-        );
-        if ($resultsRows->count() > 0) {
-            foreach ($resultsRows as $resultRow) {
-                $result = $this->parseResultsRow($resultRow);
-                if ($result) {
-                    $return[] = $result;
-                }
+        $table = $this->getCrawler()->filter('table.container')->last();
+        /** @var Crawler $resultsRows */
+        $resultsRows = $table->filter('tr');
+        if ($resultsRows->count() < 1) {
+            return [];
+        }
+        return $this->parseResultsTable($resultsRows);
+    }
+
+    protected function parseResultsTable(Crawler $resultsRows): array
+    {
+        $results = [];
+        foreach ($resultsRows as $i => $resultRow) {
+            if ($i == 0) {
+                $headerMaps = $this->parseResultsHeader($resultRow);
+                continue;
+            }
+            $result = $this->parseResultsRow($resultRow, $headerMaps);
+            if ($result) {
+                $results[] = $result;
             }
         }
-
-        return $return;
+        return $results;
     }
 
     /**
      * @return array
      */
-    protected function parseResultsHeader()
+    protected function parseResultsHeader(DOMElement $headerRow)
     {
-        $return = [];
-
-        $fields = $this->getCrawler()->filter(
-            '#ctl00_Content_Main_grdNew_DXHeadersRow table td a'
-        );
+        $columns = $headerRow->childNodes;
         $fieldMap = self::getLabelMaps();
-        if ($fields->count() > 0) {
-            $colNum = 0;
-            foreach ($fields as $field) {
-                $fieldName = $field->nodeValue;
-                $labelFind = array_search($fieldName, $fieldMap);
-                if ($labelFind) {
-                    $return[$colNum] = $labelFind;
-                }
-                $colNum++;
+
+        if ($columns->count() < 1) {
+            return [];
+        }
+        $return = [];
+        $colNum = 0;
+        foreach ($columns as $cell) {
+            if (!($cell instanceof DOMElement)) {
+                continue;
             }
+            $fieldName = strtolower(trim(strip_tags($cell->nodeValue)));
+            $labelFind = isset($fieldMap[$fieldName]) ? $fieldMap[$fieldName] : null;
+            if ($labelFind) {
+                $return[$colNum] = $labelFind;
+            }
+            $colNum++;
         }
 
         return $return;
@@ -81,15 +89,23 @@ class ResultsPage extends AbstractParser
      *
      * @return bool|Result
      */
-    protected function parseResultsRow(DOMElement $row)
+    protected function parseResultsRow(DOMElement $row, array $headerMaps)
     {
         $parameters = [];
+
+        $colNum = 0;
         foreach ($row->childNodes as $cell) {
-            if ($cell instanceof DOMElement) {
-                $parameters = $this->parseResultsRowCell($cell, $parameters);
+            if (!($cell instanceof DOMElement)) {
+                continue;
             }
+
+            $field = isset($headerMaps[$colNum]) ? $headerMaps[$colNum] : null;
+            $colNum++;
+            if (!$field) {
+                continue;
+            }
+            $this->parseResultsRowCell($cell, $field, $parameters);
         }
-        $parameters['id'] = $this->parseResultId($row);
 
         if (count($parameters)) {
             return new Result($parameters);
@@ -100,131 +116,57 @@ class ResultsPage extends AbstractParser
 
     /**
      * @param DOMElement $cell
+     * @param $field
      * @param array $parameters
-     *
-     * @return array
      */
-    protected function  parseResultsRowCell(DOMElement $cell, $parameters = [])
+    protected function parseResultsRowCell(DOMElement $cell, $field, &$parameters = [])
     {
-        $class = $cell->getAttribute('class');
-        $type = trim(str_replace(['first', 'last', 'odd', 'even'], '', $class));
-
-        if (strpos($type, ' round')) {
-            $this->parseRound($type, $cell, $parameters);
-            return $parameters;
-        }
-
-        $field = array_search($type, self::getLabelMaps());
-
-        if ($field) {
-            $parameters[$field] = trim($cell->nodeValue);
-            return $parameters;
-        }
-
-        if (!$this->parseCountry($cell, $parameters)) {
-            $this->parseResultName($cell, $parameters);
-        }
-
-        return $parameters;
-    }
-
-    /**
-     * @param DOMElement $row
-     * @return string
-     */
-    protected function parseResultId(DOMElement $row)
-    {
-        $resultUrl = $row->getAttribute('rel');
-        $resultId = str_replace(
-            ['en/event-zone/ajax/event/'],
-            '',
-            $resultUrl);
-        return $resultId;
-    }
-
-    /**
-     * @param DOMElement $cell
-     * @param $parameters
-     * @return bool
-     */
-    protected function parseResultName($cell, &$parameters)
-    {
-        $spans = $cell->getElementsByTagName('span');
-        if ($spans->length > 0) {
-            $firstSpan = $spans->item(0);
-            $class = $firstSpan->getAttribute('class');
-            $name = $firstSpan->getAttribute('title');
-            if ($class == 'tip') {
-                $parameters['fullName'] = $name;
+        if ($field == 'gender') {
+            $value = $this->parseGender($cell);
+            if ($value) {
+                $parameters[$field] = $value;
             }
-            return true;
+            return;
         }
-        return false;
-    }
 
-    /**
-     * @param string $round
-     * @param DOMElement $cell
-     * @param $parameters
-     * @return bool
-     */
-    protected function parseRound($round, $cell, &$parameters)
-    {
-        $roundName = trim(str_replace(' round', '', $round));
-        $parameters['splits'] = isset($parameters['splits']) ? $parameters['splits'] : new SplitCollection();
-
-        $parameters['splits'][] = new Split(['name' => $roundName, 'time' => trim($cell->nodeValue)]);
-        return false;
+        $value = trim($cell->nodeValue);
+        $parameters[$field] = $value;
     }
 
     /**
      * @param DOMElement $cell
-     * @param $parameters
-     * @return bool
+     * @return string|void
      */
-    protected function parseCountry($cell, &$parameters)
+    protected function parseGender(DOMElement $cell): string
     {
-        $imageCountry = $cell->getElementsByTagName('img');
-        if ($imageCountry->length > 0) {
-            $image = $imageCountry->item(0);
-            $src = $image->getAttribute('src');
-            if (strpos($src, 'flags')) {
-                $parameters['country'] = $image->getAttribute('title');
-            }
-            return true;
+        $image = $cell->getElementsByTagName('img');
+        if ($image->length < 1) {
+            return '';
         }
-        return false;
+        $image = $image->item(0);
+        $src = $image->getAttribute('src');
+        if (strpos($src, 'm.png') !== false) {
+            return 'male';
+        }
+
+        if (strpos($src, 'f.png') !== false) {
+            return 'female';
+        }
+
+        return '';
     }
+
 
     /**
      * @return array
      */
     protected function parseResultsPagination()
     {
-        $return = [
+        return [
             'current' => 1,
             'all' => 1,
             'items' => 1,
         ];
-
-        $paginationObject = $this->getCrawler()->filter(
-            '.tmr_event_pagination_content'
-        );
-
-        if ($paginationObject->count() > 0) {
-            $return['current'] = $paginationObject->filter('a.page-current')->text();
-
-            $lastURL = $paginationObject->filter('a.page-last')->getNode(0)->getAttribute('href');
-            $lastPage = substr($lastURL, strpos($lastURL, '/expanded/page/') + 15, -1);
-            $return['all'] = $lastPage + 1;
-        }
-
-        $countElement = $this->getCrawler()->filter('#participantCount');
-        if ($countElement->count() > 0) {
-            $return['items'] = intval($countElement->text());
-        }
-
-        return $return;
     }
 
     /**
@@ -233,14 +175,16 @@ class ResultsPage extends AbstractParser
     public static function getLabelMaps()
     {
         return [
-            'posGen' => 'total_place',
-            'bib' => 'start_nr',
+            'bib' => 'bib',
+            'nume' => 'fullName',
+            'sex' => 'gender',
             'gender' => 'gender',
             'category' => 'agegroup',
-            'posCategory' => 'agegroup_place',
-            'posGender' => 'gender_place',
-            'club' => 'club',
-            'time' => 'brutto',
+            'loc categorie' => 'posCategory',
+            'loc open sex' => 'posGender',
+            'loc general' => 'posGen',
+            'echipa' => 'team_name',
+            'timp' => 'time',
         ];
     }
 

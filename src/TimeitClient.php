@@ -5,7 +5,6 @@ namespace Sportic\Omniresult\Timeit;
 use Sportic\Omniresult\Common\RequestDetector\HasDetectorTrait;
 use Sportic\Omniresult\Common\TimingClient;
 use Sportic\Omniresult\Timeit\Scrapers\EventPage;
-use Sportic\Omniresult\Timeit\Scrapers\ResultPage;
 use Sportic\Omniresult\Timeit\Scrapers\ResultsPage;
 
 /**
@@ -25,21 +24,12 @@ class TimeitClient extends TimingClient
         return $this->executeScrapper(EventPage::class, $parameters);
     }
 
-//    /**
-//     * @param $parameters
-//     * @return \Sportic\Omniresult\Common\Parsers\AbstractParser|Parsers\ResultsPage
-//     */
-//    public function results($parameters)
-//    {
-//        return $this->executeScrapper(ResultsPage::class, $parameters);
-//    }
-//
-//    /**
-//     * @param $parameters
-//     * @return \Sportic\Omniresult\Common\Parsers\AbstractParser|Parsers\ResultPage
-//     */
-//    public function result($parameters)
-//    {
-//        return $this->executeScrapper(ResultPage::class, $parameters);
-//    }
+    /**
+     * @param $parameters
+     * @return \Sportic\Omniresult\Common\Parsers\AbstractParser|Parsers\ResultsPage
+     */
+    public function results($parameters)
+    {
+        return $this->executeScrapper(ResultsPage::class, $parameters);
+    }
 }
