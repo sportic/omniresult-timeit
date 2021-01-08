@@ -86,7 +86,7 @@ class ResultsPage extends AbstractScraper
     {
         return $this->getCrawlerUriHost()
             . '/' . $this->getEventSlug()
-            . '/?slug='            . $this->getCategorySlug()
+            . '/?sort='            . $this->getCategorySlug()
             . '&head=off';
     }
 }

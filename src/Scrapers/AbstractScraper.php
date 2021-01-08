@@ -22,12 +22,13 @@ abstract class AbstractScraper extends \Sportic\Omniresult\Common\Scrapers\Abstr
     /**
      * @return array
      */
-    protected function generateParserData()
+    protected function generateParserData(): array
     {
         $this->getRequest();
 
         return [
             'scraper' => $this,
+            'crawler' => $this->getCrawler(),
             'response' => $this->getClient()->getResponse(),
         ];
     }

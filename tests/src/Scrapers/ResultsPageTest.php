@@ -19,7 +19,7 @@ class ResultsPageTest extends TestCase
         static::assertInstanceOf(Crawler::class, $crawler);
 
         static::assertSame(
-            'https://time-it.ro/2020/parang/?slug=C1M&head=off',
+            'https://time-it.ro/2020/parang/?sort=C1M&head=off',
             $crawler->getUri()
         );
     }
@@ -41,7 +41,7 @@ class ResultsPageTest extends TestCase
         $crawler = $scraper->getCrawler();
 
         static::assertSame(
-            'https://time-it.ro/2020/parang/?slug=S2F&head=off',
+            'https://time-it.ro/2020/parang/?sort=S2F&head=off',
             $crawler->getUri()
         );
 
