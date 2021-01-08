@@ -31,9 +31,10 @@ class ResultsPage extends AbstractScraper
     /**
      * @return int
      */
-    public function getPage()
+    public function getPage(): int
     {
-        return $this->getParameter('page', 1);
+        $page = $this->getParameter('page', 1);
+        return $page < 1 ? 1 : $page;
     }
 
     /**
