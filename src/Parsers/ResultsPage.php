@@ -162,7 +162,7 @@ class ResultsPage extends AbstractParser
      */
     protected function parseResultsPagination()
     {
-        $categories = $this->getParameter('raceCategories', []);
+        $categories = $this->getParameter('categories', []);
         return [
             'current' => $this->getParameter('page', 1),
             'all' => count($categories),

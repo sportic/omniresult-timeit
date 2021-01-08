@@ -26,25 +26,23 @@ class ResultsPageTest extends TestCase
 
     public function test_getCrawlerUri_with_categories_array()
     {
-        $params = [
-            'eventSlug' => '2020/parang',
-            'page' => 2,
-            'categories' => [
-                'C1M' => 'Masculin',
-                'C2M' => '',
-                'S1M' => '',
-                'S2F' => 'Feminin',
+        $crawler = $this->getCrawler(
+            [
+                'categorySlug' => null,
+                'page' => 2,
+                'categories' => [
+                    'C1M' => 'Masculin',
+                    'C2M' => '',
+                    'S1M' => '',
+                    'S2F' => 'Feminin',
+                ]
             ]
-        ];
-        $scraper = new ResultsPage();
-        $scraper->initialize($params);
-        $crawler = $scraper->getCrawler();
+        );
 
         static::assertSame(
             'https://time-it.ro/2020/parang/?sort=S2F&head=off',
             $crawler->getUri()
         );
-
     }
 
     public function testGetCrawlerHtml()
@@ -70,16 +68,17 @@ class ResultsPageTest extends TestCase
 //    }
 
     /**
+     * @param array $params
      * @return Crawler
      */
-    protected function getCrawler()
+    protected function getCrawler($params = [])
     {
-        $params = [
+        $paramsDefault = [
             'eventSlug' => '2020/parang',
             'categorySlug' => 'C1M',
         ];
         $scraper = new ResultsPage();
-        $scraper->initialize($params);
+        $scraper->initialize(array_merge($paramsDefault, $params));
         return $scraper->getCrawler();
     }
 }

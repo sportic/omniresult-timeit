@@ -41,16 +41,18 @@ class ResultsPage extends AbstractScraper
      */
     public function getCategorySlug()
     {
-        if (!$this->hasParameter('categorySlug')) {
+        $slug = $this->getParameter('categorySlug');
+        if (empty($slug)) {
             $categories = $this->getCategories();
             $page = $this->getPage() - 1;
             $keys = array_keys($categories);
             if (isset($keys[$page])) {
-                $this->setParameter('categorySlug', $keys[$page]);
-                $this->setParameter('categoryName', $categories[$keys[$page]]);
+                $slug = $keys[$page];
+                $this->setParameter('categorySlug', $slug);
+                $this->setParameter('categoryName', $categories[$slug]);
             }
         }
-        return $this->getParameter('categorySlug');
+        return $slug;
     }
 
     /**
@@ -86,7 +88,7 @@ class ResultsPage extends AbstractScraper
     {
         return $this->getCrawlerUriHost()
             . '/' . $this->getEventSlug()
-            . '/?sort='            . $this->getCategorySlug()
+            . '/?sort=' . $this->getCategorySlug()
             . '&head=off';
     }
 }
