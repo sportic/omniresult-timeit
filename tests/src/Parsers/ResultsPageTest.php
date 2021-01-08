@@ -15,9 +15,12 @@ class ResultsPageTest extends AbstractPageTest
 
     public function testGenerateContentResultList()
     {
+        $scraper = new PageScraper();
+        $scraper->setParameter('categoryName', 'Cat1');
+
         $parametersParsed = static::initParserFromFixtures(
             new PageParser(),
-            (new PageScraper()),
+            $scraper,
             'ResultsPage/SimpleTable/page'
         );
 
@@ -35,7 +38,7 @@ class ResultsPageTest extends AbstractPageTest
                 'fullName' => 'Codrea Gheorghe',
                 'href' => null,
                 'time' => '01:01:23',
-                'category' => null,
+                'category' => 'Cat1',
                 'gender' => 'male',
                 'id' => null,
                 'parameters' => null,

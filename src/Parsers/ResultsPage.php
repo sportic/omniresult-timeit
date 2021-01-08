@@ -108,6 +108,7 @@ class ResultsPage extends AbstractParser
         }
 
         if (count($parameters)) {
+            $parameters['category'] = $this->getScraper()->getParameter('categoryName');
             return new Result($parameters);
         }
 
@@ -156,16 +157,15 @@ class ResultsPage extends AbstractParser
         return '';
     }
 
-
     /**
      * @return array
      */
     protected function parseResultsPagination()
     {
+        $categories = $this->getParameter('raceCategories', []);
         return [
-            'current' => 1,
-            'all' => 1,
-            'items' => 1,
+            'current' => $this->getParameter('page', 1),
+            'all' => count($categories),
         ];
     }
 

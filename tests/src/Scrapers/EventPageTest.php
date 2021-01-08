@@ -12,9 +12,24 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class EventPageTest extends TestCase
 {
-    public function testGetCrawlerUri()
+    public function test_getCrawlerUri()
     {
         $crawler = $this->getCrawler();
+
+        static::assertInstanceOf(Crawler::class, $crawler);
+
+        static::assertSame(
+            'https://time-it.ro/2020/parang/',
+            $crawler->getUri()
+        );
+    }
+
+    public function test_getCrawlerUriHostNull()
+    {
+        $params = ['eventSlug' => '2020/parang', 'host' => ''];
+        $scraper = new PageScraper();
+        $scraper->initialize($params);
+        $crawler = $scraper->getCrawler();
 
         static::assertInstanceOf(Crawler::class, $crawler);
 
@@ -30,7 +45,7 @@ class EventPageTest extends TestCase
 
         static::assertInstanceOf(Crawler::class, $crawler);
 
-        $html =  $crawler->html();
+        $html = $crawler->html();
 
         static::assertStringContainsString('Parang Night Challenge 2020', $html);
         static::assertStringContainsString('Alergare', $html);

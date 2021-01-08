@@ -20,6 +20,19 @@ abstract class AbstractScraper extends \Sportic\Omniresult\Common\Scrapers\Abstr
     }
 
     /**
+     * @return array
+     */
+    protected function generateParserData()
+    {
+        $this->getRequest();
+
+        return [
+            'scraper' => $this,
+            'response' => $this->getClient()->getResponse(),
+        ];
+    }
+
+    /**
      * @return string
      */
     abstract public function getCrawlerUri();
@@ -29,6 +42,8 @@ abstract class AbstractScraper extends \Sportic\Omniresult\Common\Scrapers\Abstr
      */
     protected function getCrawlerUriHost()
     {
-        return 'https://'.$this->getParameter('host','time-it.ro');;
+        $host = $this->getParameter('host', 'time-it.ro');
+        $host = empty($host) ? 'time-it.ro' : $host;
+        return 'https://' . $host;
     }
 }

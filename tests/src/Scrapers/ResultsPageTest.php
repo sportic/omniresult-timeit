@@ -12,7 +12,7 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class ResultsPageTest extends TestCase
 {
-    public function testGetCrawlerUri()
+    public function test_getCrawlerUri()
     {
         $crawler = $this->getCrawler();
 
@@ -22,6 +22,29 @@ class ResultsPageTest extends TestCase
             'https://time-it.ro/2020/parang/?slug=C1M&head=off',
             $crawler->getUri()
         );
+    }
+
+    public function test_getCrawlerUri_with_categories_array()
+    {
+        $params = [
+            'eventSlug' => '2020/parang',
+            'page' => 2,
+            'categories' => [
+                'C1M' => 'Masculin',
+                'C2M' => '',
+                'S1M' => '',
+                'S2F' => 'Feminin',
+            ]
+        ];
+        $scraper = new ResultsPage();
+        $scraper->initialize($params);
+        $crawler = $scraper->getCrawler();
+
+        static::assertSame(
+            'https://time-it.ro/2020/parang/?slug=S2F&head=off',
+            $crawler->getUri()
+        );
+
     }
 
     public function testGetCrawlerHtml()
