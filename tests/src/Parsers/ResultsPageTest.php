@@ -86,4 +86,24 @@ class ResultsPageTest extends AbstractPageTest
         self::assertSame('12', $result->getPosGender());
         self::assertSame('6', $result->getPosCategory());
     }
+
+    public function test_table_withSosireCP()
+    {
+        $parametersParsed = static::initParserFromFixtures(
+            new PageParser(),
+            (new PageScraper()),
+            'ResultsPage/TableWithSosireCP/page'
+        );
+
+        /** @var array|Result[] $results */
+        $results = $parametersParsed['records'];
+
+        self::assertCount(171, $results);
+
+        $result = $results[5];
+        self::assertInstanceOf(Result::class, $result);
+        self::assertSame('6', $result->getPosGender());
+        self::assertSame('male', $result->getGender());
+        self::assertSame('14:13:03', $result->getTime());
+    }
 }

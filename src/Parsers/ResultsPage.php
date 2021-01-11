@@ -193,6 +193,7 @@ class ResultsPage extends AbstractParser
             'loc general' => 'posGen',
             'general' => 'posGen',
             'echipa' => 'team_name',
+            'sosire' => 'time',
             'timp' => 'time',
         ];
     }
