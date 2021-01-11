@@ -86,7 +86,7 @@ class RequestDetector extends AbstractUrlDetector
 
     protected function detectUrlPathParts()
     {
-        $path = trim(strtolower($this->getUrlComponent('path')),'/');
+        $path = trim($this->getUrlComponent('path'),'/');
         $parts = explode('/', $path);
         $this->pathParts = $parts;
     }

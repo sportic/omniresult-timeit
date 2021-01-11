@@ -48,7 +48,7 @@ class RequestDetectorTest extends AbstractTest
             'https://time-it.go.ro/2020/IezerRun/index.php?head=off&sort=cm',
                 true,
                 'results',
-                ['host' => 'time-it.go.ro', 'eventSlug' => '2020/iezerrun', 'slug' => 'cm']
+                ['host' => 'time-it.go.ro', 'eventSlug' => '2020/IezerRun', 'slug' => 'cm']
             ],
             [
             'https://time-it.go.ro/2020/iasiintrail/index.php?head=off&sort=c1f',
