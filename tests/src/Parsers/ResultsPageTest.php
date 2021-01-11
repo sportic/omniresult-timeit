@@ -66,4 +66,24 @@ class ResultsPageTest extends AbstractPageTest
 
         self::assertEquals($parametersSerialized, $parametersParsed);
     }
+
+    public function test_table_withDiploma()
+    {
+        $parametersParsed = static::initParserFromFixtures(
+            new PageParser(),
+            (new PageScraper()),
+            'ResultsPage/TableWithDiploma/page'
+        );
+
+        /** @var array|Result[] $results */
+        $results = $parametersParsed['records'];
+
+        self::assertCount(590, $results);
+
+        $result = $results[5];
+        self::assertInstanceOf(Result::class, $result);
+        self::assertSame('12', $result->getPosGen());
+        self::assertSame('12', $result->getPosGender());
+        self::assertSame('6', $result->getPosCategory());
+    }
 }

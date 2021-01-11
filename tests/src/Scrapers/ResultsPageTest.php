@@ -57,14 +57,14 @@ class ResultsPageTest extends TestCase
 //    public function testgenerateFixture()
 //    {
 //        $params = [
-//            'eventSlug' => '2020/parang',
-//            'categorySlug' => 'C1M'
+//            'eventSlug' => '2017/Ciucas',
+//            'categorySlug' => 'Semimaraton1M'
 //        ];
 //        $scraper = new ResultsPage();
 //        $scraper->initialize($params);
 //        $crawler = $scraper->getCrawler();
 //
-//        file_put_contents(TEST_FIXTURE_PATH . '/Parsers/ResultsPage/SimpleTable/page.html', $crawler->html());
+//        file_put_contents(TEST_FIXTURE_PATH . '/Parsers/ResultsPage/TableWithDiploma/page.html', $crawler->html());
 //    }
 
     /**

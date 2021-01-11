@@ -122,8 +122,10 @@ class ResultsPage extends AbstractParser
      */
     protected function parseResultsRowCell(DOMElement $cell, $field, &$parameters = [])
     {
-        if ($field == 'gender') {
-            $value = $this->parseGender($cell);
+        $method = 'parseRowCell' . ucfirst($field);
+
+        if (method_exists($this, $method)) {
+            $value = $this->$method($cell, $parameters);
             if ($value) {
                 $parameters[$field] = $value;
             }
@@ -136,9 +138,10 @@ class ResultsPage extends AbstractParser
 
     /**
      * @param DOMElement $cell
+     * @param array $parameters
      * @return string|void
      */
-    protected function parseGender(DOMElement $cell): string
+    protected function parseRowCellGender(DOMElement $cell, &$parameters = []): string
     {
         $image = $cell->getElementsByTagName('img');
         if ($image->length < 1) {
@@ -146,6 +149,10 @@ class ResultsPage extends AbstractParser
         }
         $image = $image->item(0);
         $src = $image->getAttribute('src');
+        if (strpos($src, 'diploma.png') !== false) {
+            $this->parseResultsRowCell($cell, 'posGender', $parameters);
+            return '';
+        }
         if (strpos($src, 'm.png') !== false) {
             return 'male';
         }
@@ -172,7 +179,7 @@ class ResultsPage extends AbstractParser
     /**
      * @return array
      */
-    public static function getLabelMaps()
+    public static function getLabelMaps(): array
     {
         return [
             'bib' => 'bib',
@@ -181,8 +188,10 @@ class ResultsPage extends AbstractParser
             'gender' => 'gender',
             'category' => 'agegroup',
             'loc categorie' => 'posCategory',
+            'categorie' => 'posCategory',
             'loc open sex' => 'posGender',
             'loc general' => 'posGen',
+            'general' => 'posGen',
             'echipa' => 'team_name',
             'timp' => 'time',
         ];
@@ -191,15 +200,15 @@ class ResultsPage extends AbstractParser
     /** @noinspection PhpMissingParentCallCommonInspection
      * @inheritdoc
      */
-    protected function getContentClassName()
+    protected function getContentClassName(): string
     {
         return ListContent::class;
     }
 
-    /** @noinspection PhpMissingParentCallCommonInspection
+    /**
      * @inheritdoc
      */
-    public function getModelClassName()
+    public function getModelClassName(): string
     {
         return Result::class;
     }
