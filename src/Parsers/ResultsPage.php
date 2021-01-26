@@ -107,12 +107,14 @@ class ResultsPage extends AbstractParser
             $this->parseResultsRowCell($cell, $field, $parameters);
         }
 
-        if (count($parameters)) {
-            $parameters['category'] = $this->getScraper()->getParameter('categoryName');
-            return new Result($parameters);
+        if (count($parameters) < 1) {
+            return false;
         }
-
-        return false;
+        if ($parameters['fullNameLF'] == '~') {
+            return false;
+        }
+        $parameters['category'] = $this->getScraper()->getParameter('categoryName');
+        return new Result($parameters);
     }
 
     /**

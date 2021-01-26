@@ -78,7 +78,7 @@ class ResultsPageTest extends AbstractPageTest
         /** @var array|Result[] $results */
         $results = $parametersParsed['records'];
 
-        self::assertCount(590, $results);
+        self::assertCount(246, $results);
 
         $result = $results[5];
         self::assertInstanceOf(Result::class, $result);
@@ -98,12 +98,32 @@ class ResultsPageTest extends AbstractPageTest
         /** @var array|Result[] $results */
         $results = $parametersParsed['records'];
 
-        self::assertCount(171, $results);
+        self::assertCount(165, $results);
 
         $result = $results[5];
         self::assertInstanceOf(Result::class, $result);
         self::assertSame('6', $result->getPosGender());
         self::assertSame('male', $result->getGender());
         self::assertSame('14:13:03', $result->getTime());
+    }
+
+    public function test_table_EmptyResults()
+    {
+        $parametersParsed = static::initParserFromFixtures(
+            new PageParser(),
+            (new PageScraper()),
+            'ResultsPage/EmptyResults/page'
+        );
+
+        /** @var array|Result[] $results */
+        $results = $parametersParsed['records'];
+
+        self::assertCount(18, $results);
+
+        $result = $results[17];
+        self::assertInstanceOf(Result::class, $result);
+        self::assertSame('94', $result->getPosGender());
+        self::assertSame('male', $result->getGender());
+        self::assertSame('03:45:07', $result->getTime());
     }
 }
