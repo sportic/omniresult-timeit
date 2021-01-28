@@ -107,6 +107,26 @@ class ResultsPageTest extends AbstractPageTest
         self::assertSame('14:13:03', $result->getTime());
     }
 
+    public function test_table_withTimpSosire()
+    {
+        $parametersParsed = static::initParserFromFixtures(
+            new PageParser(),
+            (new PageScraper()),
+            'ResultsPage/TimpSosire/page'
+        );
+
+        /** @var array|Result[] $results */
+        $results = $parametersParsed['records'];
+
+        self::assertCount(15, $results);
+
+        $result = $results[5];
+        self::assertInstanceOf(Result::class, $result);
+        self::assertSame('6', $result->getPosGender());
+        self::assertSame('male', $result->getGender());
+        self::assertSame('2:23:34', $result->getTime());
+    }
+
     public function test_table_EmptyResults()
     {
         $parametersParsed = static::initParserFromFixtures(

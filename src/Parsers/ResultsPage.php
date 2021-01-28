@@ -197,6 +197,7 @@ class ResultsPage extends AbstractParser
             'echipa' => 'team_name',
             'sosire' => 'time',
             'timp' => 'time',
+            'timp sosire' => 'time',
         ];
     }
 
