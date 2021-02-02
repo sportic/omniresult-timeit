@@ -24,6 +24,28 @@ class ResultsPageTest extends TestCase
         );
     }
 
+    public function test_getCrawlerUri_with_host()
+    {
+        $crawler = $this->getCrawler(
+            [
+                'host' => 'time-it.go.ro',
+                'categorySlug' => null,
+                'page' => 2,
+                'categories' => [
+                    'C1M' => 'Masculin',
+                    'C2M' => '',
+                    'S1M' => '',
+                    'S2F' => 'Feminin',
+                ]
+            ]
+        );
+
+        static::assertSame(
+            'https://time-it.go.ro/2020/parang/?sort=S2F&head=off',
+            $crawler->getUri()
+        );
+    }
+
     public function test_getCrawlerUri_with_categories_array()
     {
         $crawler = $this->getCrawler(
