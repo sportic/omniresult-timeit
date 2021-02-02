@@ -4,6 +4,7 @@ namespace Sportic\Omniresult\Timeit\Scrapers;
 
 use ByTIC\GouttePhantomJs\Clients\ClientFactory;
 use Goutte\Client;
+use Symfony\Component\HttpClient\HttpClient;
 
 /**
  * Class AbstractScraper
@@ -14,9 +15,15 @@ abstract class AbstractScraper extends \Sportic\Omniresult\Common\Scrapers\Abstr
     /** @noinspection PhpMissingParentCallCommonInspection
      * @return Client
      */
-    protected function generateClient()
+    protected function generateClient(): Client
     {
-        return ClientFactory::getGoutteClient();
+        $client = HttpClient::create(
+            [
+                'verify_peer' => false,
+            ]
+        );
+
+        return ClientFactory::getGoutteClient($client);
     }
 
     /**

@@ -39,6 +39,12 @@ class RequestDetectorTest extends AbstractTest
                 ['host' => 'time-it.go.ro', 'eventSlug' => '2020/subcarpati']
             ],
             [
+                'https://time-it.go.ro/2019/CorcovaTrailRace/',
+                true,
+                'event',
+                ['host' => 'time-it.go.ro', 'eventSlug' => '2019/CorcovaTrailRace']
+            ],
+            [
             'https://time-it.go.ro/2020/subcarpati/index.php?head=off&sort=c1f',
                 true,
                 'results',

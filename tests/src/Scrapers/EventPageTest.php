@@ -39,6 +39,21 @@ class EventPageTest extends TestCase
         );
     }
 
+    public function test_getCrawlerUri_WithHost()
+    {
+        $params = ['eventSlug' => '2019/CorcovaTrailRace', 'host' => 'time-it.go.ro'];
+        $scraper = new PageScraper();
+        $scraper->initialize($params);
+        $crawler = $scraper->getCrawler();
+
+        static::assertInstanceOf(Crawler::class, $crawler);
+
+        static::assertSame(
+            'https://time-it.go.ro/2019/CorcovaTrailRace/',
+            $crawler->getUri()
+        );
+    }
+
     public function testGetCrawlerHtml()
     {
         $crawler = $this->getCrawler();
@@ -54,12 +69,12 @@ class EventPageTest extends TestCase
 
 //    public function testgenerateFixture()
 //    {
-//        $params = ['eventSlug' => '2016/CorcovaTrailRace'];
+//        $params = ['eventSlug' => '2019/CorcovaTrailRace'];
 //        $scraper = new PageScraper();
 //        $scraper->initialize($params);
 //        $crawler= $scraper->getCrawler();
 //
-//        file_put_contents(TEST_FIXTURE_PATH . '/Parsers/EventPage/MultipleRaceCategoriesByClass/page.html', $crawler->html());
+//        file_put_contents(TEST_FIXTURE_PATH . '/Parsers/EventPage/Testpage/page.html', $crawler->html());
 //    }
 
 
