@@ -196,6 +196,7 @@ class ResultsPage extends AbstractParser
             'general' => 'posGen',
             'echipa' => 'team_name',
             'sosire' => 'time',
+            'finish' => 'time',
             'timp' => 'time',
             'timp sosire' => 'time',
         ];
