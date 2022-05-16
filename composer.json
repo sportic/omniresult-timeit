@@ -8,14 +8,19 @@
       "email": "hello@gabrielsolomon.ro"
     }
   ],
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/gabrielsolomon/php-phantomjs"
+    }
+  ],
   "require": {
-    "php": "^7.2|^8.0",
+    "php": "^7.4|^8.0",
     "ext-dom": "*",
     "sportic/omniresult-common": "^1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.2|^8.0|^9.0",
-    "mockery/mockery": "^1.1"
+    "bytic/phpqatools": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -26,5 +31,7 @@
     "psr-4": {
       "Sportic\\Omniresult\\Timeit\\Tests\\": "tests/src"
     }
-  }
+  },
+  "prefer-stable": true,
+  "minimum-stability": "dev"
 }
