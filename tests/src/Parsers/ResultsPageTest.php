@@ -49,7 +49,10 @@ class ResultsPageTest extends AbstractPageTest
                 'firstName' => 'Gheorghe',
                 'lastName' => 'Codrea',
                 'timeGross' => null,
-                'notes' => null
+                'notes' => null,
+                'dob' => null,
+                'yob' => null,
+                'result' => null,
             ],
             $results[5]->__toArray()
         );
@@ -82,9 +85,9 @@ class ResultsPageTest extends AbstractPageTest
 
         $result = $results[5];
         self::assertInstanceOf(Result::class, $result);
-        self::assertSame('12', $result->getPosGen());
-        self::assertSame('12', $result->getPosGender());
-        self::assertSame('6', $result->getPosCategory());
+        self::assertEquals('12', $result->getPosGen());
+        self::assertEquals('12', $result->getPosGender());
+        self::assertEquals('6', $result->getPosCategory());
     }
 
     public function test_table_withSosireCP()
@@ -102,9 +105,9 @@ class ResultsPageTest extends AbstractPageTest
 
         $result = $results[5];
         self::assertInstanceOf(Result::class, $result);
-        self::assertSame('6', $result->getPosGender());
-        self::assertSame('male', $result->getGender());
-        self::assertSame('14:13:03', $result->getTime());
+        self::assertEquals('6', $result->getPosGender());
+        self::assertEquals('male', $result->getGender());
+        self::assertEquals('14:13:03', $result->getTime());
     }
 
     public function test_table_withTimpSosire()
@@ -122,9 +125,9 @@ class ResultsPageTest extends AbstractPageTest
 
         $result = $results[5];
         self::assertInstanceOf(Result::class, $result);
-        self::assertSame('6', $result->getPosGender());
-        self::assertSame('male', $result->getGender());
-        self::assertSame('2:23:34', $result->getTime());
+        self::assertEquals('6', $result->getPosGender());
+        self::assertEquals('male', $result->getGender());
+        self::assertEquals('2:23:34', $result->getTime());
     }
 
     public function test_table_withTimpFinish()
@@ -142,9 +145,9 @@ class ResultsPageTest extends AbstractPageTest
 
         $result = $results[5];
         self::assertInstanceOf(Result::class, $result);
-        self::assertSame('6', $result->getPosGender());
-        self::assertSame('male', $result->getGender());
-        self::assertSame('00:22:02', $result->getTime());
+        self::assertEquals('6', $result->getPosGender());
+        self::assertEquals('male', $result->getGender());
+        self::assertEquals('00:22:02', $result->getTime());
     }
 
     public function test_table_EmptyResults()
@@ -162,8 +165,8 @@ class ResultsPageTest extends AbstractPageTest
 
         $result = $results[17];
         self::assertInstanceOf(Result::class, $result);
-        self::assertSame('94', $result->getPosGender());
-        self::assertSame('male', $result->getGender());
-        self::assertSame('03:45:07', $result->getTime());
+        self::assertEquals('94', $result->getPosGender());
+        self::assertEquals('male', $result->getGender());
+        self::assertEquals('03:45:07', $result->getTime());
     }
 }

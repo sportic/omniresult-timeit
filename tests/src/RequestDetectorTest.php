@@ -45,23 +45,29 @@ class RequestDetectorTest extends AbstractTest
                 ['host' => 'time-it.go.ro', 'eventSlug' => '2019/CorcovaTrailRace']
             ],
             [
-            'https://time-it.go.ro/2020/subcarpati/index.php?head=off&sort=c1f',
+                'https://time-it.go.ro/2020/subcarpati/index.php?head=off&sort=c1f',
                 true,
                 'results',
                 ['host' => 'time-it.go.ro', 'eventSlug' => '2020/subcarpati', 'slug' => 'c1f']
             ],
             [
-            'https://time-it.go.ro/2020/IezerRun/index.php?head=off&sort=cm',
+                'https://time-it.go.ro/2020/IezerRun/index.php?head=off&sort=cm',
                 true,
                 'results',
                 ['host' => 'time-it.go.ro', 'eventSlug' => '2020/IezerRun', 'slug' => 'cm']
             ],
             [
-            'https://time-it.go.ro/2020/iasiintrail/index.php?head=off&sort=c1f',
+                'https://time-it.go.ro/2020/iasiintrail/index.php?head=off&sort=c1f',
                 true,
                 'results',
                 ['host' => 'time-it.go.ro', 'eventSlug' => '2020/iasiintrail', 'slug' => 'c1f']
-            ]
+            ],
+            [
+                'https://time-it.go.ro/2024/carpathia/',
+                true,
+                'event',
+                ['host' => 'time-it.go.ro', 'eventSlug' => '2024/carpathia']
+            ],
         ];
     }
 }
