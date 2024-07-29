@@ -3,8 +3,11 @@
 namespace Sportic\Omniresult\Timeit\Tests\Parsers;
 
 use Sportic\Omniresult\Common\Models\Result;
+use Sportic\Omniresult\Common\Models\Split;
 use Sportic\Omniresult\Timeit\Parsers\ResultsPage as PageParser;
 use Sportic\Omniresult\Timeit\Scrapers\ResultsPage as PageScraper;
+
+use function PHPUnit\Framework\assertInstanceOf;
 
 /**
  * Class EventPageTest
@@ -150,6 +153,36 @@ class ResultsPageTest extends AbstractPageTest
         self::assertEquals('00:22:02', $result->getTime());
     }
 
+    public function test_table_withTimpFinishSplits()
+    {
+        $parametersParsed = static::initParserFromFixtures(
+            new PageParser(),
+            (new PageScraper()),
+            'ResultsPage/TimpFinishSplits/page'
+        );
+
+        /** @var array|Result[] $results */
+        $results = $parametersParsed['records'];
+
+        self::assertCount(62, $results);
+
+        $result = $results[5];
+        self::assertInstanceOf(Result::class, $result);
+        self::assertEquals('6', $result->getPosGender());
+        self::assertEquals('male', $result->getGender());
+        self::assertEquals('1:28:16', $result->getTime());
+
+        $splits = $result->getSplits();
+        self::assertCount(2, $splits);
+
+        $splitOne = $splits[0];
+        assertInstanceOf(Split::class, $splitOne);
+        self::assertEquals('1:01:51', $splitOne->getTime());
+
+        $splitTwo = $splits[1];
+        assertInstanceOf(Split::class, $splitTwo);
+        self::assertEquals('0:26:24', $splitTwo->getTime());
+    }
     public function test_table_EmptyResults()
     {
         $parametersParsed = static::initParserFromFixtures(

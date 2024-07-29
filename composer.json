@@ -18,7 +18,8 @@
     "php": "^7.4|^8.0",
     "ext-dom": "*",
     "sportic/omniresult-common": "^1.0",
-    "symfony/css-selector": "^6.4|^7.0"
+    "symfony/css-selector": "^6.4|^7.0",
+    "bytic/utility": "^1.0"
   },
   "require-dev": {
     "bytic/phpqatools": "^1.0"

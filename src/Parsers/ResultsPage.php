@@ -3,8 +3,10 @@
 namespace Sportic\Omniresult\Timeit\Parsers;
 
 use DOMElement;
+use Nip\Utility\Str;
 use Sportic\Omniresult\Common\Content\ListContent;
 use Sportic\Omniresult\Common\Models\Result;
+use Sportic\Omniresult\Common\Models\Split;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -14,6 +16,8 @@ use Symfony\Component\DomCrawler\Crawler;
 class ResultsPage extends AbstractParser
 {
     protected $returnContent = [];
+
+    protected const LEG_START_STRING = 'leg-';
 
     /**
      * @return array
@@ -73,10 +77,13 @@ class ResultsPage extends AbstractParser
             if (!($cell instanceof DOMElement)) {
                 continue;
             }
-            $fieldName = strtolower(trim(strip_tags($cell->nodeValue)));
-            $labelFind = isset($fieldMap[$fieldName]) ? $fieldMap[$fieldName] : null;
+            $fieldNameOriginal = trim(strip_tags($cell->nodeValue));
+            $fieldName = strtolower($fieldNameOriginal);
+            $labelFind = $fieldMap[$fieldName] ?? null;
             if ($labelFind) {
                 $return[$colNum] = $labelFind;
+            } elseif (Str::startsWith($fieldNameOriginal, 'Timp ')) {
+                $return[$colNum] = self::LEG_START_STRING . Str::replace('Timp ','', $fieldNameOriginal);
             }
             $colNum++;
         }
@@ -95,16 +102,7 @@ class ResultsPage extends AbstractParser
 
         $colNum = 0;
         foreach ($row->childNodes as $cell) {
-            if (!($cell instanceof DOMElement)) {
-                continue;
-            }
-
-            $field = isset($headerMaps[$colNum]) ? $headerMaps[$colNum] : null;
-            $colNum++;
-            if (!$field) {
-                continue;
-            }
-            $this->parseResultsRowCell($cell, $field, $parameters);
+            $this->parseResultsRowCell($cell, $headerMaps, $colNum, $parameters);
         }
 
         if (count($parameters) < 1) {
@@ -116,16 +114,32 @@ class ResultsPage extends AbstractParser
         $parameters['category'] = $this->getScraper()->getParameter('categoryName');
         return new Result($parameters);
     }
+    protected function parseResultsRowCell(DOMElement $cell, $headerMaps, &$colNum, &$parameters = [])
+    {
+        if (!($cell instanceof DOMElement)) {
+            return;
+        }
 
+        $field = $headerMaps[$colNum] ?? null;
+        $colNum++;
+        if ($field) {
+            $this->parseResultsRowField($cell, $field, $parameters);
+            return;
+        }
+    }
     /**
      * @param DOMElement $cell
      * @param $field
      * @param array $parameters
      */
-    protected function parseResultsRowCell(DOMElement $cell, $field, &$parameters = [])
+    protected function parseResultsRowField(DOMElement $cell, $field, &$parameters = [])
     {
+        if (Str::startsWith($field, self::LEG_START_STRING)) {
+            $field = Str::replace(self::LEG_START_STRING, '', $field);
+            $this->parseResultsRowFieldLeg($cell, $field, $parameters);
+            return;
+        }
         $method = 'parseRowCell' . ucfirst($field);
-
         if (method_exists($this, $method)) {
             $value = $this->$method($cell, $parameters);
             if ($value) {
@@ -152,7 +166,7 @@ class ResultsPage extends AbstractParser
         $image = $image->item(0);
         $src = $image->getAttribute('src');
         if (strpos($src, 'diploma.png') !== false) {
-            $this->parseResultsRowCell($cell, 'posGender', $parameters);
+            $this->parseResultsRowField($cell, 'posGender', $parameters);
             return '';
         }
         if (strpos($src, 'm.png') !== false) {
@@ -166,6 +180,14 @@ class ResultsPage extends AbstractParser
         return '';
     }
 
+    protected function parseResultsRowFieldLeg(DOMElement $cell, string $field, array &$parameters)
+    {
+        $split = new Split();
+        $split->setTime($field);
+        $value = trim($cell->nodeValue);
+        $split->setParameters(['time' => $value]);
+        $parameters['splits'][] = $split;
+    }
     /**
      * @return array
      */
@@ -199,6 +221,7 @@ class ResultsPage extends AbstractParser
             'finish' => 'time',
             'timp' => 'time',
             'timp sosire' => 'time',
+            'timp finish' => 'time',
         ];
     }
 
@@ -217,4 +240,5 @@ class ResultsPage extends AbstractParser
     {
         return Result::class;
     }
+
 }
